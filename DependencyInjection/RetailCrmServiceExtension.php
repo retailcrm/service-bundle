@@ -3,6 +3,10 @@
 namespace RetailCrm\ServiceBundle\DependencyInjection;
 
 use RetailCrm\ServiceBundle\ArgumentResolver\CallbackValueResolver;
+use RetailCrm\ServiceBundle\ArgumentResolver\ClientValueResolver;
+use RetailCrm\ServiceBundle\Response\ErrorJsonResponseFactory;
+use RetailCrm\ServiceBundle\Security\CallbackClientAuthenticator;
+use RetailCrm\ServiceBundle\Security\FrontApiClientAuthenticator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 
@@ -31,6 +35,24 @@ class RetailCrmServiceExtension extends Extension
             ->register(CallbackValueResolver::class)
             ->setArgument('$requestSchema', '%retail_crm_service.request_schema.callback%')
             ->addTag('controller.argument_value_resolver', ['priority' => 50])
+            ->setAutowired(true);
+
+        $container
+            ->register(ClientValueResolver::class)
+            ->setArgument('$requestSchema', '%retail_crm_service.request_schema.client%')
+            ->addTag('controller.argument_value_resolver', ['priority' => 50])
+            ->setAutowired(true);
+
+        $container
+            ->register(ErrorJsonResponseFactory::class)
+            ->setAutowired(true);
+
+        $container
+            ->register(CallbackClientAuthenticator::class)
+            ->setAutowired(true);
+
+        $container
+            ->register(FrontApiClientAuthenticator::class)
             ->setAutowired(true);
     }
 }

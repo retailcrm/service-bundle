@@ -49,10 +49,16 @@ class CallbackValueResolver extends AbstractValueResolver implements ArgumentVal
         yield $data;
     }
 
+    /**
+     * @param Request          $request
+     * @param ArgumentMetadata $argument
+     *
+     * @return string|null
+     */
     private function search(Request $request, ArgumentMetadata $argument): ?string
     {
         foreach ($this->requestSchema as $callback) {
-            if (!$argument->getName() === $callback['type']) {
+            if ($argument->getType() !== $callback['type']) {
                 continue;
             }
 
