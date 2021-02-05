@@ -30,6 +30,7 @@
 !bin/console
 !bin/symfony_requirements
 /vendor/
+composer.lock
 
 # Assets and user uploads
 /web/bundles/
@@ -38,6 +39,8 @@
 # PHPUnit
 /app/phpunit.xml
 /phpunit.xml
+.phpunit.result.cache
+test-report.xml
 
 # Build data
 /build/
@@ -50,3 +53,6 @@
 
 # Embedded web-server pid file
 /.web-server-pid
+
+.idea
+coverage.xml
