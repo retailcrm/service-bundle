@@ -10,9 +10,21 @@
          stopOnFailure="false"
          bootstrap="vendor/autoload.php"
 >
+    <coverage>
+        <exclude>
+            <directory>./Tests</directory>
+            <directory>./vendor</directory>
+        </exclude>
+        <report>
+            <clover outputFile="coverage.xml"/>
+        </report>
+    </coverage>
     <testsuites>
         <testsuite name="RetailCRM Service Bundle Tests">
             <directory>./Tests</directory>
         </testsuite>
     </testsuites>
+    <logging>
+        <junit outputFile="test-report.xml"/>
+    </logging>
 </phpunit>

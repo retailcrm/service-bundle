@@ -9,11 +9,23 @@ use Symfony\Component\Serializer\SerializerInterface;
 use Generator;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
+/**
+ * Class CallbackValueResolver
+ *
+ * @package RetailCrm\ServiceBundle\ArgumentResolver
+ */
 class CallbackValueResolver extends AbstractValueResolver implements ArgumentValueResolverInterface
 {
     private $serializer;
     private $requestSchema;
 
+    /**
+     * CallbackValueResolver constructor.
+     *
+     * @param SerializerInterface $serializer
+     * @param ValidatorInterface  $validator
+     * @param array               $requestSchema
+     */
     public function __construct(
         SerializerInterface $serializer,
         ValidatorInterface $validator,

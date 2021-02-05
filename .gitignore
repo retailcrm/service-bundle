@@ -40,6 +40,7 @@ composer.lock
 /app/phpunit.xml
 /phpunit.xml
 .phpunit.result.cache
+test-report.xml
 
 # Build data
 /build/
@@ -54,3 +55,4 @@ composer.lock
 /.web-server-pid
 
 .idea
+coverage.xml

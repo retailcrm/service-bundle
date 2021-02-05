@@ -11,12 +11,25 @@ use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Generator;
 
+/**
+ * Class ClientValueResolver
+ *
+ * @package RetailCrm\ServiceBundle\ArgumentResolver
+ */
 class ClientValueResolver extends AbstractValueResolver implements ArgumentValueResolverInterface
 {
     private $serializer;
     private $denormalizer;
     private $requestSchema;
 
+    /**
+     * ClientValueResolver constructor.
+     *
+     * @param ValidatorInterface    $validator
+     * @param SerializerInterface   $serializer
+     * @param DenormalizerInterface $denormalizer
+     * @param array                 $requestSchema
+     */
     public function __construct(
         ValidatorInterface $validator,
         SerializerInterface $serializer,

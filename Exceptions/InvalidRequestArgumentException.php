@@ -28,6 +28,9 @@ class InvalidRequestArgumentException extends InvalidArgumentException
         $this->validateErrors = $errors;
     }
 
+    /**
+     * @return iterable
+     */
     public function getValidateErrors(): iterable
     {
         return $this->validateErrors;

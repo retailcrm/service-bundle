@@ -11,6 +11,11 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\User\UserInterface;
 
+/**
+ * Class CallbackClientAuthenticatorTest
+ *
+ * @package RetailCrm\ServiceBundle\Tests\Security
+ */
 class CallbackClientAuthenticatorTest extends TestCase
 {
     public function testStart(): void

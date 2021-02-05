@@ -14,6 +14,11 @@ use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Validator\Validation;
 use Generator;
 
+/**
+ * Class CallbackValueResolverTest
+ *
+ * @package RetailCrm\ServiceBundle\Tests\ArgumentResolver
+ */
 class CallbackValueResolverTest extends TestCase
 {
     private $resolver;

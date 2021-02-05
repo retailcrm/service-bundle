@@ -14,6 +14,11 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
 
+/**
+ * Class FrontApiClientAuthenticatorTest
+ *
+ * @package RetailCrm\ServiceBundle\Tests\Security
+ */
 class FrontApiClientAuthenticatorTest extends TestCase
 {
     public function testStart(): void
@@ -100,7 +105,7 @@ class FrontApiClientAuthenticatorTest extends TestCase
         $security->method('getUser')->willReturn(null);
 
         $auth = new FrontApiClientAuthenticator($errorResponseFactory, $security);
-        $result = $auth->supports(new Request());
+        $result = $auth->supports(new Request([], [FrontApiClientAuthenticator::AUTH_FIELD => '123']));
 
         static::assertTrue($result);
     }

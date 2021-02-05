@@ -4,6 +4,11 @@ namespace RetailCrm\ServiceBundle\Tests\DataFixtures;
 
 use Symfony\Component\Security\Core\User\UserInterface;
 
+/**
+ * Class User
+ *
+ * @package RetailCrm\ServiceBundle\Tests\DataFixtures
+ */
 class User implements UserInterface
 {
     public function getRoles(): array
