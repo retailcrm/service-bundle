@@ -11,6 +11,9 @@
          bootstrap="vendor/autoload.php"
 >
     <coverage>
+        <include>
+            <directory>./</directory>
+        </include>
         <exclude>
             <directory>./Tests</directory>
             <directory>./vendor</directory>
