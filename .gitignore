@@ -40,10 +40,7 @@ composer.lock
 /app/phpunit.xml
 /phpunit.xml
 .phpunit.result.cache
-<<<<<<< HEAD
 test-report.xml
-=======
->>>>>>> add callback argument value resolver
 
 # Build data
 /build/
