@@ -31,7 +31,10 @@ class RetailCrmServiceExtensionTest extends TestCase
         $extension->load(
             [
                 [
-                    'request_schema' => []
+                    'request_schema' => [
+                        'callback' => [],
+                        'client' => []
+                    ]
                 ]
             ],
             $container
@@ -44,8 +47,10 @@ class RetailCrmServiceExtensionTest extends TestCase
 
     public function testLoad(): void
     {
-        static::assertTrue($this->container->hasParameter('retail_crm_service.request_schema.callback'));
-        static::assertTrue($this->container->hasParameter('retail_crm_service.request_schema.client'));
+        static::assertTrue($this->container->hasParameter('retail_crm_service.request_schema.callback.supports'));
+        static::assertTrue($this->container->hasParameter('retail_crm_service.request_schema.callback.serializer'));
+        static::assertTrue($this->container->hasParameter('retail_crm_service.request_schema.client.supports'));
+        static::assertTrue($this->container->hasParameter('retail_crm_service.request_schema.client.serializer'));
         static::assertTrue($this->container->hasDefinition(CallbackValueResolver::class));
         static::assertTrue($this->container->hasDefinition(ClientValueResolver::class));
         static::assertTrue($this->container->hasDefinition(ErrorJsonResponseFactory::class));

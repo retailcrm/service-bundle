@@ -5,6 +5,7 @@ namespace RetailCrm\ServiceBundle\Tests\ArgumentResolver;
 use PHPUnit\Framework\TestCase;
 use RetailCrm\ServiceBundle\ArgumentResolver\ClientValueResolver;
 use RetailCrm\ServiceBundle\Exceptions\InvalidRequestArgumentException;
+use RetailCrm\ServiceBundle\Serializer\SymfonySerializerAdapter;
 use RetailCrm\ServiceBundle\Tests\DataFixtures\RequestDto;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
@@ -27,11 +28,10 @@ class ClientValueResolverTest extends TestCase
     {
         $serializer = new Serializer([new ObjectNormalizer()], [new JsonEncoder()]);
         $this->resolver = new ClientValueResolver(
+            new SymfonySerializerAdapter($serializer, $serializer),
             Validation::createValidatorBuilder()
                 ->enableAnnotationMapping()
                 ->getValidator(),
-            $serializer,
-            $serializer,
             [
                 RequestDto::class
             ]

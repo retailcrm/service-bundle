@@ -7,8 +7,11 @@ use RetailCrm\ServiceBundle\ArgumentResolver\ClientValueResolver;
 use RetailCrm\ServiceBundle\Response\ErrorJsonResponseFactory;
 use RetailCrm\ServiceBundle\Security\CallbackClientAuthenticator;
 use RetailCrm\ServiceBundle\Security\FrontApiClientAuthenticator;
+use RetailCrm\ServiceBundle\Serializer\JMSSerializerAdapter;
+use RetailCrm\ServiceBundle\Serializer\SymfonySerializerAdapter;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
+use Symfony\Component\DependencyInjection\Reference;
 
 /**
  * Class RetailCrmServiceExtension
@@ -27,24 +30,52 @@ class RetailCrmServiceExtension extends Extension
         $config = $this->processConfiguration($configuration, $configs);
 
         $container->setParameter(
-            'retail_crm_service.request_schema.callback',
-            $config['request_schema']['callback']
+            'retail_crm_service.request_schema.callback.supports',
+            $config['request_schema']['callback']['supports']
         );
 
         $container->setParameter(
-            'retail_crm_service.request_schema.client',
-            $config['request_schema']['client']
+            'retail_crm_service.request_schema.client.supports',
+            $config['request_schema']['client']['supports']
+        );
+
+        $container->setParameter(
+            'retail_crm_service.request_schema.callback.serializer',
+            $config['request_schema']['callback']['serializer']
+        );
+
+        $container->setParameter(
+            'retail_crm_service.request_schema.client.serializer',
+            $config['request_schema']['client']['serializer']
         );
 
         $container
+            ->register(SymfonySerializerAdapter::class)
+            ->setAutowired(true);
+        $container->setAlias('retail_crm_service.symfony_serializer.adapter', SymfonySerializerAdapter::class);
+
+        $container
+            ->register(JMSSerializerAdapter::class)
+            ->setAutowired(true);
+        $container->setAlias('retail_crm_service.jms_serializer.adapter', JMSSerializerAdapter::class);
+
+        $container
             ->register(CallbackValueResolver::class)
-            ->setArgument('$requestSchema', '%retail_crm_service.request_schema.callback%')
+            ->setArguments([
+                new Reference($container->getParameter('retail_crm_service.request_schema.callback.serializer')),
+                new Reference('validator'),
+                $container->getParameter('retail_crm_service.request_schema.callback.supports')
+            ])
             ->addTag('controller.argument_value_resolver', ['priority' => 50])
             ->setAutowired(true);
 
         $container
             ->register(ClientValueResolver::class)
-            ->setArgument('$requestSchema', '%retail_crm_service.request_schema.client%')
+            ->setArguments([
+                new Reference($container->getParameter('retail_crm_service.request_schema.client.serializer')),
+                new Reference('validator'),
+                $container->getParameter('retail_crm_service.request_schema.client.supports')
+            ])
             ->addTag('controller.argument_value_resolver', ['priority' => 50])
             ->setAutowired(true);
 
