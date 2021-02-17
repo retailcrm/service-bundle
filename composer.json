@@ -35,7 +35,8 @@
         "ext-json": "*",
         "phpunit/phpunit": "^8.0 || ^9.0",
         "doctrine/annotations": "^1.11",
-        "doctrine/cache": "^1.10"
+        "doctrine/cache": "^1.10",
+        "jms/serializer-bundle": "^3.8"
     },
     "scripts": {
         "tests": "./vendor/bin/phpunit -c phpunit.xml.dist"

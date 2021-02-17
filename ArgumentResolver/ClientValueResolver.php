@@ -2,12 +2,10 @@
 
 namespace RetailCrm\ServiceBundle\ArgumentResolver;
 
+use RetailCrm\ServiceBundle\Serializer\Adapter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ArgumentValueResolverInterface;
 use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
-use Symfony\Component\Serializer\Exception\ExceptionInterface;
-use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
-use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Generator;
 
@@ -19,27 +17,24 @@ use Generator;
 class ClientValueResolver extends AbstractValueResolver implements ArgumentValueResolverInterface
 {
     private $serializer;
-    private $denormalizer;
     private $requestSchema;
 
     /**
      * ClientValueResolver constructor.
      *
+     *
+     * @param Adapter               $serializer
      * @param ValidatorInterface    $validator
-     * @param SerializerInterface   $serializer
-     * @param DenormalizerInterface $denormalizer
      * @param array                 $requestSchema
      */
     public function __construct(
+        Adapter $serializer,
         ValidatorInterface $validator,
-        SerializerInterface $serializer,
-        DenormalizerInterface $denormalizer,
         array $requestSchema
     ) {
         parent::__construct($validator);
 
         $this->serializer = $serializer;
-        $this->denormalizer = $denormalizer;
         $this->requestSchema = $requestSchema;
     }
 
@@ -72,12 +67,10 @@ class ClientValueResolver extends AbstractValueResolver implements ArgumentValue
      * @param string $type
      *
      * @return object
-     *
-     * @throws ExceptionInterface
      */
     private function handleGetData(array $data, string $type): object
     {
-        return $this->denormalizer->denormalize($data, $type);
+        return $this->serializer->arrayToObject($data, $type);
     }
 
     /**
@@ -88,6 +81,6 @@ class ClientValueResolver extends AbstractValueResolver implements ArgumentValue
      */
     private function handlePostData(string $data, string $type): object
     {
-        return $this->serializer->deserialize($data, $type, 'json');
+        return $this->serializer->deserialize($data, $type);
     }
 }

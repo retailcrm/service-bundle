@@ -21,14 +21,18 @@ class ConfigurationTest extends TestCase
             [
                 'request_schema' => [
                     'callback' => [
-                        [
-                            'type' => 'type',
-                            'params' => ['param']
+                        'supports' => [
+                            [
+                                'type' => 'type',
+                                'params' => ['param']
+                            ]
                         ]
                     ],
                     'client' => [
-                        'type1',
-                        'type2'
+                        'supports' => [
+                            'type1',
+                            'type2'
+                        ]
                     ]
                 ]
             ]
@@ -44,14 +48,14 @@ class ConfigurationTest extends TestCase
                 'type' => 'type',
                 'params' => ['param']
             ],
-            $config['request_schema']['callback'][0]
+            $config['request_schema']['callback']['supports'][0]
         );
         static::assertEquals(
             [
                 'type1',
                 'type2'
             ],
-            $config['request_schema']['client']
+            $config['request_schema']['client']['supports']
         );
     }
 
@@ -63,7 +67,9 @@ class ConfigurationTest extends TestCase
             [
                 'request_schema' => [
                     'client' => [
-                        'type',
+                        'supports' => [
+                            'type',
+                        ]
                     ]
                 ]
             ]
@@ -72,6 +78,6 @@ class ConfigurationTest extends TestCase
         $config = $processor->processConfiguration(new Configuration(), $configs);
 
         static::assertArrayHasKey('client', $config['request_schema']);
-        static::assertEquals(['type'], $config['request_schema']['client']);
+        static::assertEquals(['type'], $config['request_schema']['client']['supports']);
     }
 }
