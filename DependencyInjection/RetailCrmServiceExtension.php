@@ -4,6 +4,7 @@ namespace RetailCrm\ServiceBundle\DependencyInjection;
 
 use RetailCrm\ServiceBundle\ArgumentResolver\CallbackValueResolver;
 use RetailCrm\ServiceBundle\ArgumentResolver\ClientValueResolver;
+use RetailCrm\ServiceBundle\Messenger\MessageHandler;
 use RetailCrm\ServiceBundle\Response\ErrorJsonResponseFactory;
 use RetailCrm\ServiceBundle\Security\CallbackClientAuthenticator;
 use RetailCrm\ServiceBundle\Security\FrontApiClientAuthenticator;
@@ -49,6 +50,11 @@ class RetailCrmServiceExtension extends Extension
             $config['request_schema']['client']['serializer']
         );
 
+        $container->setParameter(
+            'retail_crm_service.messenger.message_handler',
+            $config['messenger']['message_handler']
+        );
+
         $container
             ->register(SymfonySerializerAdapter::class)
             ->setAutowired(true);
@@ -89,6 +95,24 @@ class RetailCrmServiceExtension extends Extension
 
         $container
             ->register(FrontApiClientAuthenticator::class)
+            ->setAutowired(true);
+
+        $container
+            ->register(MessageHandler\SimpleConsoleRunner::class)
+            ->setAutowired(true);
+        $container->setAlias('simple_console_runner', MessageHandler\SimpleConsoleRunner::class);
+
+        $container
+            ->register(MessageHandler\InNewProcessRunner::class)
+            ->setAutowired(true);
+        $container->setAlias('in_new_process_runner', MessageHandler\InNewProcessRunner::class);
+
+        $container
+            ->register(MessageHandler::class)
+            ->addTag('messenger.message_handler')
+            ->setArguments([
+                new Reference($container->getParameter('retail_crm_service.messenger.message_handler'))
+            ])
             ->setAutowired(true);
     }
 }
