@@ -56,6 +56,7 @@ class Configuration implements ConfigurationInterface
                 ->arrayNode('messenger')
                     ->children()
                         ->scalarNode('message_handler')->isRequired()->defaultValue('simple_console_runner')->end()
+                        ->scalarNode('process_timeout')->end()
                     ->end()
                 ->end()
             ->end();

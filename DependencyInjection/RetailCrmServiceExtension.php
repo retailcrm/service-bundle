@@ -55,6 +55,13 @@ class RetailCrmServiceExtension extends Extension
             $config['messenger']['message_handler']
         );
 
+        if (isset($config['messenger']['process_timeout'])) {
+            $container->setParameter(
+                'retail_crm_service.messenger.process_timeout',
+                $config['messenger']['process_timeout']
+            );
+        }
+
         $container
             ->register(SymfonySerializerAdapter::class)
             ->setAutowired(true);
@@ -102,8 +109,13 @@ class RetailCrmServiceExtension extends Extension
             ->setAutowired(true);
         $container->setAlias('simple_console_runner', MessageHandler\SimpleConsoleRunner::class);
 
+        $timeout = $container->hasParameter('retail_crm_service.messenger.process_timeout')
+            ? $container->getParameter('retail_crm_service.messenger.process_timeout')
+            : null;
+
         $container
             ->register(MessageHandler\InNewProcessRunner::class)
+            ->setArgument('$timeout', $timeout)
             ->setAutowired(true);
         $container->setAlias('in_new_process_runner', MessageHandler\InNewProcessRunner::class);
 

@@ -30,15 +30,28 @@ class InNewProcessRunner implements JobRunner
     private $kernel;
 
     /**
+     * @var int
+     */
+    private $timeout = self::DEFAULT_TIMEOUT;
+
+    /**
      * CommandQueueHandler constructor.
      *
      * @param LoggerInterface $logger
      * @param KernelInterface $kernel
+     * @param int|null        $timeout
      */
-    public function __construct(LoggerInterface $logger, KernelInterface $kernel)
-    {
+    public function __construct(
+        LoggerInterface $logger,
+        KernelInterface $kernel,
+        ?int $timeout = null
+    ) {
         $this->logger = $logger;
         $this->kernel = $kernel;
+
+        if (null !== $timeout) {
+            $this->timeout = $timeout;
+        }
     }
 
     /**
@@ -63,7 +76,7 @@ class InNewProcessRunner implements JobRunner
 
         try {
             $process
-                ->setTimeout(static::DEFAULT_TIMEOUT)
+                ->setTimeout($this->timeout)
                 ->run(static function(string $type, string $buffer) {
                     echo $buffer;
                 })

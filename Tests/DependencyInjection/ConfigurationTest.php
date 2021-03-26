@@ -34,7 +34,8 @@ class ConfigurationTest extends TestCase
                             'type2'
                         ]
                     ]
-                ]
+                ],
+                'messenger' => []
             ]
         ];
 
@@ -71,7 +72,8 @@ class ConfigurationTest extends TestCase
                             'type',
                         ]
                     ]
-                ]
+                ],
+                'messenger' => []
             ]
         ];
 
