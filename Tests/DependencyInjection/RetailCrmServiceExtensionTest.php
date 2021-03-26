@@ -34,6 +34,9 @@ class RetailCrmServiceExtensionTest extends TestCase
                     'request_schema' => [
                         'callback' => [],
                         'client' => []
+                    ],
+                    'messenger' => [
+                        'message_handler' => 'simple_console_runner'
                     ]
                 ]
             ],
