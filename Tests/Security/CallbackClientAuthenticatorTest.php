@@ -5,11 +5,14 @@ namespace RetailCrm\ServiceBundle\Tests\Security;
 use PHPUnit\Framework\TestCase;
 use RetailCrm\ServiceBundle\Response\ErrorJsonResponseFactory;
 use RetailCrm\ServiceBundle\Security\CallbackClientAuthenticator;
+use RetailCrm\ServiceBundle\Tests\DataFixtures\User;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 /**
  * Class CallbackClientAuthenticatorTest
@@ -99,7 +102,7 @@ class CallbackClientAuthenticatorTest extends TestCase
             );
 
         $auth = new CallbackClientAuthenticator($errorResponseFactory);
-        $result = $auth->start(new Request(), new AuthenticationException());
+        $result = $auth->onAuthenticationFailure(new Request(), new AuthenticationException());
 
         static::assertInstanceOf(JsonResponse::class, $result);
         static::assertEquals(Response::HTTP_FORBIDDEN, $result->getStatusCode());
@@ -131,5 +134,35 @@ class CallbackClientAuthenticatorTest extends TestCase
         $result = $auth->supportsRememberMe();
 
         static::assertFalse($result);
+    }
+
+    public function testGetUser(): void
+    {
+        $errorResponseFactory = $this->createMock(ErrorJsonResponseFactory::class);
+        $user = new User();
+        $auth = new CallbackClientAuthenticator($errorResponseFactory);
+
+        $userProvider = $this->createMock(UserProviderInterface::class);
+        $userProvider
+            ->expects(static::once())
+            ->method('loadUserByUsername')
+            ->with('clientId')
+            ->willReturn($user)
+        ;
+
+        $result = $auth->getUser('clientId', $userProvider);
+        static::assertEquals($user, $result);
+    }
+
+    public function testOnAuthenticationSuccess(): void
+    {
+        $errorResponseFactory = $this->createMock(ErrorJsonResponseFactory::class);
+        $request = $this->createMock(Request::class);
+        $token = $this->createMock(TokenInterface::class);
+        $auth = new CallbackClientAuthenticator($errorResponseFactory);
+
+        $result = $auth->onAuthenticationSuccess($request, $token, 'key');
+
+        static::assertNull($result);
     }
 }
