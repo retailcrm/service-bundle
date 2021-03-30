@@ -3,12 +3,11 @@
 namespace RetailCrm\ServiceBundle\Messenger\MessageHandler;
 
 use Psr\Log\LoggerInterface;
-use RetailCrm\ServiceBundle\Messenger\Message;
+use RetailCrm\ServiceBundle\Messenger\CommandMessage;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\HttpKernel\KernelInterface;
-use Exception;
 
 /**
  * Class SimpleConsoleRunner
@@ -42,7 +41,7 @@ class SimpleConsoleRunner implements JobRunner
     /**
      * {@inheritdoc}
      */
-    public function run(Message $message): void
+    public function run(CommandMessage $message): void
     {
         $application = new Application($this->kernel);
         $application->setAutoExit(false);
@@ -56,7 +55,11 @@ class SimpleConsoleRunner implements JobRunner
         );
 
         $output = new BufferedOutput();
-        $application->run($input, $output);
+        if ($application->run($input, $output) > 0) {
+            $this->logger->error($output->fetch());
+
+            return;
+        }
 
         echo $output->fetch();
     }

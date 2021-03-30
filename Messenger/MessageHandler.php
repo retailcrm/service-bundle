@@ -29,11 +29,11 @@ class MessageHandler implements MessageHandlerInterface
     }
 
     /**
-     * @param Message $message
+     * @param CommandMessage $message
      *
      * @throws Exception
      */
-    public function __invoke(Message $message): void
+    public function __invoke(CommandMessage $message): void
     {
         $this->runner->run($message);
     }

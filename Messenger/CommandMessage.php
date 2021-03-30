@@ -7,7 +7,7 @@ namespace RetailCrm\ServiceBundle\Messenger;
  *
  * @package RetailCrm\ServiceBundle\Messenger
  */
-abstract class Message
+abstract class CommandMessage
 {
     /** @var string */
     protected $commandName;

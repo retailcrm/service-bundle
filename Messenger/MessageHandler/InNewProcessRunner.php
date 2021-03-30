@@ -3,7 +3,7 @@
 namespace RetailCrm\ServiceBundle\Messenger\MessageHandler;
 
 use Psr\Log\LoggerInterface;
-use RetailCrm\ServiceBundle\Messenger\Message;
+use RetailCrm\ServiceBundle\Messenger\CommandMessage;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Process\Exception\ProcessTimedOutException;
 use Symfony\Component\Process\PhpExecutableFinder;
@@ -57,7 +57,7 @@ class InNewProcessRunner implements JobRunner
     /**
      * {@inheritdoc}
      */
-    public function run(Message $message): void
+    public function run(CommandMessage $message): void
     {
         $phpBinaryPath = (new PhpExecutableFinder)->find();
         $consoleCommand = [
@@ -93,11 +93,11 @@ class InNewProcessRunner implements JobRunner
     }
 
     /**
-     * @param Message $message
+     * @param CommandMessage $message
      *
      * @return array
      */
-    private function getOptions(Message $message): array
+    private function getOptions(CommandMessage $message): array
     {
         $options = [];
         foreach ($message->getFormattedOptions() as $option => $value) {

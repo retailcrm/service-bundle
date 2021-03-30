@@ -2,7 +2,7 @@
 
 namespace RetailCrm\ServiceBundle\Messenger\MessageHandler;
 
-use RetailCrm\ServiceBundle\Messenger\Message;
+use RetailCrm\ServiceBundle\Messenger\CommandMessage;
 
 /**
  * Interface JobRunner
@@ -12,7 +12,7 @@ use RetailCrm\ServiceBundle\Messenger\Message;
 interface JobRunner
 {
     /**
-     * @param Message $message
+     * @param CommandMessage $message
      */
-    public function run(Message $message): void;
+    public function run(CommandMessage $message): void;
 }
