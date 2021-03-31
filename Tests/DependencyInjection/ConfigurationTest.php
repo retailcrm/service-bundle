@@ -34,6 +34,10 @@ class ConfigurationTest extends TestCase
                             'type2'
                         ]
                     ]
+                ],
+                'messenger' => [
+                    'message_handler' => 'simple_console_runner',
+                    'process_timeout' => 60
                 ]
             ]
         ];
@@ -71,6 +75,9 @@ class ConfigurationTest extends TestCase
                             'type',
                         ]
                     ]
+                ],
+                'messenger' => [
+                    'message_handler' => 'simple_console_runner'
                 ]
             ]
         ];

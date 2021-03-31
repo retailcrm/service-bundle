@@ -1,0 +1,9 @@
+#!/usr/bin/env php
+<?php
+
+require_once __DIR__ . '/../../../vendor/autoload.php';
+
+$input = new Symfony\Component\Console\Input\ArgvInput();
+$kernel = new RetailCrm\ServiceBundle\Tests\Fixtures\App\Kernel('test', true);
+$application = new Symfony\Bundle\FrameworkBundle\Console\Application($kernel);
+$application->run($input);

@@ -10,6 +10,9 @@
          stopOnFailure="false"
          bootstrap="vendor/autoload.php"
 >
+    <php>
+        <server name="KERNEL_CLASS" value="RetailCrm\ServiceBundle\Tests\Fixtures\App\Kernel" />
+    </php>
     <coverage>
         <include>
             <directory>./</directory>
