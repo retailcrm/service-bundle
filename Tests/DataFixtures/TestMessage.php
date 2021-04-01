@@ -3,8 +3,9 @@
 namespace RetailCrm\ServiceBundle\Tests\DataFixtures;
 
 use RetailCrm\ServiceBundle\Messenger\CommandMessage;
+use RetailCrm\ServiceBundle\Messenger\Middleware\LockableMessage;
 
-class TestMessage extends CommandMessage
+class TestMessage extends CommandMessage implements LockableMessage
 {
     public function __construct()
     {

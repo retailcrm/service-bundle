@@ -39,7 +39,7 @@ class LockableMessageMiddleware implements MiddlewareInterface
         $message = $envelope->getMessage();
 
         if ($envelope->all(ReceivedStamp::class) && $message instanceof LockableMessage) {
-            $lock = $this->lockFactory->createLock(md5(serialize($message)));
+            $lock = $this->lockFactory->createLock($this->hash($message), null);
             if (!$lock->acquire()) {
                 return $envelope;
             }
@@ -54,5 +54,15 @@ class LockableMessageMiddleware implements MiddlewareInterface
         }
 
         return $stack->next()->handle($envelope, $stack);
+    }
+
+    /**
+     * @param LockableMessage $message
+     *
+     * @return string
+     */
+    private function hash(LockableMessage $message): string
+    {
+        return md5(serialize($message));
     }
 }
