@@ -63,6 +63,6 @@ class LockableMessageMiddleware implements MiddlewareInterface
      */
     private function hash(LockableMessage $message): string
     {
-        return md5(serialize($message));
+        return hash('crc32c', serialize($message));
     }
 }
