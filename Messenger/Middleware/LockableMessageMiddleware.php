@@ -39,7 +39,7 @@ class LockableMessageMiddleware implements MiddlewareInterface
         $message = $envelope->getMessage();
 
         if ($envelope->all(ReceivedStamp::class) && $message instanceof LockableMessage) {
-            $lock = $this->lockFactory->createLock($this->hash($message), null);
+            $lock = $this->lockFactory->createLock($this->objectHash($message), null);
             if (!$lock->acquire()) {
                 return $envelope;
             }
