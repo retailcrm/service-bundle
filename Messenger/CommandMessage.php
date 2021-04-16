@@ -96,4 +96,18 @@ abstract class CommandMessage
 
         return $options;
     }
+
+    /**
+     * For lockable message
+     *
+     * @return array
+     */
+    public function __serialize(): array
+    {
+        return [
+            'command' => $this->getCommandName(),
+            'arguments' => $this->getArguments(),
+            'options' => $this->getOptions()
+        ];
+    }
 }
