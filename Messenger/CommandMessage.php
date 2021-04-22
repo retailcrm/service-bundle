@@ -105,7 +105,7 @@ abstract class CommandMessage
     public function __serialize(): array
     {
         return [
-            'command' => $this->getCommandName(),
+            'commandName' => $this->getCommandName(),
             'arguments' => $this->getArguments(),
             'options' => $this->getOptions()
         ];
