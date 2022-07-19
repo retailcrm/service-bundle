@@ -4,67 +4,70 @@ Example security configuration:
 
 ```yaml
 security:
+    hide_user_not_found: false
     providers:
-        client:
-            entity:
-                class: 'App\Entity\Connection' # must implements UserInterface
-                property: 'clientId'
+        connection:
+            entity: { class: App\Entity\Connection, property: clientId }
     firewalls:
-        api:
-            pattern: ^/api
-            provider: client
-            anonymous: ~
-            lazy: true
-            stateless: false
-            guard:
-                authenticators:
-                    - RetailCrm\ServiceBundle\Security\FrontApiClientAuthenticator
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+        simple-connection:
+            pattern: ^/simple-connection
+            stateless: true
+            security: false
         callback:
             pattern: ^/callback
-            provider: client
-            anonymous: ~
-            lazy: true
+            provider: connection
             stateless: true
-            guard:
-                authenticators:
-                    - RetailCrm\ServiceBundle\Security\CallbackClientAuthenticator
+            custom_authenticators:
+                - RetailCrm\ServiceBundle\Security\CallbackClientAuthenticator
+        front:
+            pattern: ^/(front|login)
+            provider: connection
+            stateless: false
+            remember_me:
+                secret: '%kernel.secret%'
+                lifetime: 604800 # 1 week in seconds
+                always_remember_me: true
+            custom_authenticators:
+                - RetailCrm\ServiceBundle\Security\FrontApiClientAuthenticator
         main:
-            anonymous: true
+            pattern: ^/
             lazy: true
 
     access_control:
-         - { path: ^/api/login, roles: IS_AUTHENTICATED_ANONYMOUSLY } # login for programmatically authentication user
-         - { path: ^/api, roles: ROLE_USER }
-         - { path: ^/callback, roles: ROLE_USER }
+        - { path: ^/front, roles: IS_AUTHENTICATED_REMEMBERED }
+        - { path: ^/simple-connection, roles: PUBLIC_ACCESS }
 ```
 
 To authenticate the user after creating it, you can use the following code
 
 ```php
 
-use Symfony\Component\Security\Guard\GuardAuthenticatorHandler;
-use RetailCrm\ServiceBundle\Security\FrontApiClientAuthenticator;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
+    use App\Entity\Connection;
+    use App\Services\ConnectionManager;
+    use Symfony\Component\HttpFoundation\Request;
+    use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
+    use RetailCrm\ServiceBundle\Security\FrontApiClientAuthenticator;
 
-class AppController extends AbstractController
-{
-    public function someAction(
-        Request $request,
-        GuardAuthenticatorHandler $guardAuthenticatorHandler,
-        FrontApiClientAuthenticator $frontApiClientAuthenticator,
-        ConnectionManager $manager
-    ): Response {
-        $user = $manager->getUser(); // getting user
+    class AppController extends AbstractController
+    {
+        public function someAction(
+            Request $request,
+            Connection $connection,
+            ConnectionManager $manager,
+            UserAuthenticatorInterface $userAuthenticator,
+            FrontApiClientAuthenticator $authenticator
+        ): Response {
+            $exist = $manager->search($connection); //get connection
 
-        $guardAuthenticatorHandler->authenticateUserAndHandleSuccess(
-            $user,
-            $request,
-            $frontApiClientAuthenticator,
-            'api'
-        );
-        // ...
+            $userAuthenticator->authenticateUser(
+                $connection,
+                $authenticator,
+                $request
+            );
+        }
     }
-}
 
 ```

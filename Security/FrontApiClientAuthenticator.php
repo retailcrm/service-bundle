@@ -2,32 +2,29 @@
 
 namespace RetailCrm\ServiceBundle\Security;
 
+use App\Repository\ConnectionRepository;
 use RetailCrm\ServiceBundle\Response\ErrorJsonResponseFactory;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Security\Http\Authenticator\Passport\Badge\RememberMeBadge;
+use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
+use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
+use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPassport;
 
-/**
- * Class FrontApiClientAuthenticator
- *
- * @package RetailCrm\ServiceBundle\Security
- */
 class FrontApiClientAuthenticator extends AbstractClientAuthenticator
 {
     private $security;
+    private $repository;
 
-    /**
-     * FrontApiClientAuthenticator constructor.
-     *
-     * @param ErrorJsonResponseFactory $errorResponseFactory
-     * @param Security                 $security
-     */
     public function __construct(
         ErrorJsonResponseFactory $errorResponseFactory,
-        Security $security
+        Security $security,
+        ConnectionRepository $repository
     ) {
         parent::__construct($errorResponseFactory);
 
         $this->security = $security;
+        $this->repository = $repository;
     }
 
     /**
@@ -45,8 +42,15 @@ class FrontApiClientAuthenticator extends AbstractClientAuthenticator
     /**
      * {@inheritdoc }
      */
-    public function supportsRememberMe(): bool
+    public function authenticate(Request $request): Passport
     {
-        return true;
+        $identifier = $request->request->get(static::AUTH_FIELD);
+
+        return new SelfValidatingPassport(
+            new UserBadge($identifier, function ($userIdentifier) {
+                return $this->repository->findByIdentifier($userIdentifier);
+            }),
+            [new RememberMeBadge()]
+        );
     }
 }
