@@ -15,11 +15,8 @@ abstract class AbstractClientAuthenticator extends AbstractAuthenticator
 {
     public const AUTH_FIELD = 'clientId';
 
-    private $errorResponseFactory;
-
-    public function __construct(ErrorJsonResponseFactory $errorResponseFactory)
+    public function __construct(private ErrorJsonResponseFactory $errorResponseFactory)
     {
-        $this->errorResponseFactory = $errorResponseFactory;
     }
 
     abstract public function supports(Request $request): ?bool;

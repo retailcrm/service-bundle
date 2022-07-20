@@ -9,14 +9,14 @@ class InvalidRequestArgumentException extends InvalidArgumentException
 {
     private $validateErrors;
 
-    public function __construct(string $message = "", int $code = 0, array $errors = [], Throwable $previous = null)
+    public function __construct(string $message = "", int $code = 0, iterable $errors = [], Throwable $previous = null)
     {
         parent::__construct($message, $code, $previous);
 
         $this->validateErrors = $errors;
     }
 
-    public function getValidateErrors(): array
+    public function getValidateErrors(): iterable
     {
         return $this->validateErrors;
     }

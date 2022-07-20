@@ -4,9 +4,18 @@ namespace RetailCrm\ServiceBundle\Models;
 
 class Error
 {
-    public string $code;
+    /**
+     * @var string
+     */
+    public $code;
 
-    public string $message;
+    /**
+     * @var string
+     */
+    public $message;
 
-    public array $details;
+    /**
+     * @var array
+     */
+    public $details;
 }

@@ -8,8 +8,9 @@ use JMS\Serializer\Annotation as JMS;
 class RequestDto
 {
     /**
+     * @var string
      * @Assert\NotNull()
      * @JMS\Type("string")
      */
-    public string $param;
+    public $param;
 }
