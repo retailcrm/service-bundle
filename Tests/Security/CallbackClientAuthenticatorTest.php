@@ -28,8 +28,7 @@ class CallbackClientAuthenticatorTest extends TestCase
                 )
             );
 
-        $userRepository = $this->createMock(ObjectRepository::class);
-        $auth = new CallbackClientAuthenticator($errorResponseFactory, $userRepository);
+        $auth = new CallbackClientAuthenticator($errorResponseFactory);
         $result = $auth->onAuthenticationFailure(new Request(), new AuthenticationException());
 
         static::assertInstanceOf(JsonResponse::class, $result);
@@ -40,8 +39,7 @@ class CallbackClientAuthenticatorTest extends TestCase
     {
         $errorResponseFactory = $this->createMock(ErrorJsonResponseFactory::class);
 
-        $userRepository = $this->createMock(ObjectRepository::class);
-        $auth = new CallbackClientAuthenticator($errorResponseFactory, $userRepository);
+        $auth = new CallbackClientAuthenticator($errorResponseFactory);
         $result = $auth->supports(new Request([], [CallbackClientAuthenticator::AUTH_FIELD => '123']));
 
         static::assertTrue($result);
@@ -67,7 +65,8 @@ class CallbackClientAuthenticatorTest extends TestCase
             ->willReturn($user)
         ;
 
-        $auth = new CallbackClientAuthenticator($errorResponseFactory, $userRepository);
+        $auth = new CallbackClientAuthenticator($errorResponseFactory);
+        $auth->setUserRepository($userRepository);
 
         $passport = $auth->authenticate(new Request([], [CallbackClientAuthenticator::AUTH_FIELD => '123']));
         $authUser = $passport->getUser();
@@ -82,8 +81,7 @@ class CallbackClientAuthenticatorTest extends TestCase
         $errorResponseFactory = $this->createMock(ErrorJsonResponseFactory::class);
         $request = $this->createMock(Request::class);
         $token = $this->createMock(TokenInterface::class);
-        $userRepository = $this->createMock(ObjectRepository::class);
-        $auth = new CallbackClientAuthenticator($errorResponseFactory, $userRepository);
+        $auth = new CallbackClientAuthenticator($errorResponseFactory);
 
         $result = $auth->onAuthenticationSuccess($request, $token, 'key');
 

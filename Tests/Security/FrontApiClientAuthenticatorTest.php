@@ -29,8 +29,7 @@ class FrontApiClientAuthenticatorTest extends TestCase
                 )
             );
         $security = $this->createMock(Security::class);
-        $userRepository = $this->createMock(ObjectRepository::class);
-        $auth = new FrontApiClientAuthenticator($errorResponseFactory, $security, $userRepository);
+        $auth = new FrontApiClientAuthenticator($errorResponseFactory, $security);
         $result = $auth->onAuthenticationFailure(new Request(), new AuthenticationException());
 
         static::assertInstanceOf(JsonResponse::class, $result);
@@ -42,8 +41,8 @@ class FrontApiClientAuthenticatorTest extends TestCase
         $errorResponseFactory = $this->createMock(ErrorJsonResponseFactory::class);
         $security = $this->createMock(Security::class);
         $security->method('getUser')->willReturn(new User());
-        $userRepository = $this->createMock(ObjectRepository::class);
-        $auth = new FrontApiClientAuthenticator($errorResponseFactory, $security, $userRepository);
+
+        $auth = new FrontApiClientAuthenticator($errorResponseFactory, $security);
         $result = $auth->supports(new Request());
 
         static::assertFalse($result);
@@ -54,8 +53,7 @@ class FrontApiClientAuthenticatorTest extends TestCase
         $errorResponseFactory = $this->createMock(ErrorJsonResponseFactory::class);
         $security = $this->createMock(Security::class);
         $security->method('getUser')->willReturn(null);
-        $userRepository = $this->createMock(ObjectRepository::class);
-        $auth = new FrontApiClientAuthenticator($errorResponseFactory, $security, $userRepository);
+        $auth = new FrontApiClientAuthenticator($errorResponseFactory, $security);
         $result = $auth->supports(new Request([], [FrontApiClientAuthenticator::AUTH_FIELD => '123']));
 
         static::assertTrue($result);
@@ -74,7 +72,8 @@ class FrontApiClientAuthenticatorTest extends TestCase
             ->with([FrontApiClientAuthenticator::AUTH_FIELD => '123'])
             ->willReturn($user)
         ;
-        $auth = new FrontApiClientAuthenticator($errorResponseFactory, $security, $userRepository);
+        $auth = new FrontApiClientAuthenticator($errorResponseFactory, $security);
+        $auth->setUserRepository($userRepository);
 
         $passport = $auth->authenticate(new Request([], [FrontApiClientAuthenticator::AUTH_FIELD => '123']));
         $authUser = $passport->getUser();
@@ -90,8 +89,8 @@ class FrontApiClientAuthenticatorTest extends TestCase
         $security = $this->createMock(Security::class);
         $request = $this->createMock(Request::class);
         $token = $this->createMock(TokenInterface::class);
-        $userRepository = $this->createMock(ObjectRepository::class);
-        $auth = new FrontApiClientAuthenticator($errorResponseFactory, $security, $userRepository);
+
+        $auth = new FrontApiClientAuthenticator($errorResponseFactory, $security);
 
         $result = $auth->onAuthenticationSuccess($request, $token, 'key');
 

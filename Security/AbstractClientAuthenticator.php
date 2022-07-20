@@ -2,6 +2,7 @@
 
 namespace RetailCrm\ServiceBundle\Security;
 
+use Doctrine\Persistence\ObjectRepository;
 use RetailCrm\ServiceBundle\Models\Error;
 use RetailCrm\ServiceBundle\Response\ErrorJsonResponseFactory;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,6 +15,8 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 abstract class AbstractClientAuthenticator extends AbstractAuthenticator
 {
     public const AUTH_FIELD = 'clientId';
+
+    protected ObjectRepository $userRepository;
 
     public function __construct(private ErrorJsonResponseFactory $errorResponseFactory)
     {
@@ -34,5 +37,10 @@ abstract class AbstractClientAuthenticator extends AbstractAuthenticator
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $providerKey): ?Response
     {
         return null;
+    }
+
+    public function setUserRepository(ObjectRepository $userRepository): void
+    {
+        $this->userRepository = $userRepository;
     }
 }

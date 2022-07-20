@@ -2,7 +2,6 @@
 
 namespace RetailCrm\ServiceBundle\Security;
 
-use Doctrine\Persistence\ObjectRepository;
 use RetailCrm\ServiceBundle\Response\ErrorJsonResponseFactory;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
@@ -17,7 +16,6 @@ class FrontApiClientAuthenticator extends AbstractClientAuthenticator
     public function __construct(
         ErrorJsonResponseFactory $errorResponseFactory,
         private Security $security,
-        private ObjectRepository $repository
     ) {
         parent::__construct($errorResponseFactory);
     }
@@ -39,9 +37,10 @@ class FrontApiClientAuthenticator extends AbstractClientAuthenticator
         }
 
         return new SelfValidatingPassport(
-            new UserBadge($identifier, function ($userIdentifier) {
-                return $this->repository->findOneBy([static::AUTH_FIELD => $userIdentifier]);
-            }),
+            new UserBadge(
+                $identifier,
+                fn ($userIdentifier) => $this->userRepository->findOneBy([static::AUTH_FIELD => $userIdentifier]),
+            ),
             [new RememberMeBadge()]
         );
     }

@@ -2,8 +2,6 @@
 
 namespace RetailCrm\ServiceBundle\Security;
 
-use Doctrine\Persistence\ObjectRepository;
-use RetailCrm\ServiceBundle\Response\ErrorJsonResponseFactory;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
@@ -12,13 +10,6 @@ use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPasspor
 
 class CallbackClientAuthenticator extends AbstractClientAuthenticator
 {
-    public function __construct(
-        ErrorJsonResponseFactory $errorResponseFactory,
-        private ObjectRepository $repository,
-    ) {
-        parent::__construct($errorResponseFactory);
-    }
-
     public function supports(Request $request): bool
     {
         return $request->request->has(static::AUTH_FIELD) || $request->query->has(static::AUTH_FIELD);
@@ -32,9 +23,10 @@ class CallbackClientAuthenticator extends AbstractClientAuthenticator
         }
 
         return new SelfValidatingPassport(
-            new UserBadge($identifier, function ($userIdentifier) {
-                return $this->repository->findOneBy([static::AUTH_FIELD => $userIdentifier]);
-            }),
+            new UserBadge(
+                $identifier,
+                fn ($userIdentifier) => $this->userRepository->findOneBy([static::AUTH_FIELD => $userIdentifier])
+            ),
             []
         );
     }
