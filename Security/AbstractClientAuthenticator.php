@@ -22,19 +22,10 @@ abstract class AbstractClientAuthenticator extends AbstractAuthenticator
         $this->errorResponseFactory = $errorResponseFactory;
     }
 
-    /**
-     * {@inheritdoc }
-     */
     abstract public function supports(Request $request): ?bool;
 
-    /**
-     * {@inheritdoc }
-     */
     abstract public function authenticate(Request $request): Passport;
 
-    /**
-     * {@inheritdoc }
-     */
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
     {
         $error = new Error();
@@ -43,9 +34,6 @@ abstract class AbstractClientAuthenticator extends AbstractAuthenticator
         return $this->errorResponseFactory->create($error,Response::HTTP_FORBIDDEN);
     }
 
-    /**
-     * {@inheritdoc }
-     */
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $providerKey): ?Response
     {
         return null;
