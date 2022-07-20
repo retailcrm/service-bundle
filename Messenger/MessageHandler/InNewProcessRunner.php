@@ -9,38 +9,17 @@ use Symfony\Component\Process\Exception\ProcessTimedOutException;
 use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Process\Process;
 
-/**
- * Class InNewProcessRunner
- *
- * @package RetailCrm\ServiceBundle\Messenger\MessageHandler
- */
 class InNewProcessRunner implements JobRunner
 {
     /** @var int Default timeout for process */
     public const DEFAULT_TIMEOUT = 3600;
 
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
+    private LoggerInterface $logger;
 
-    /**
-     * @var KernelInterface
-     */
-    private $kernel;
+    private KernelInterface $kernel;
 
-    /**
-     * @var int
-     */
-    private $timeout = self::DEFAULT_TIMEOUT;
+    private int $timeout = self::DEFAULT_TIMEOUT;
 
-    /**
-     * CommandQueueHandler constructor.
-     *
-     * @param LoggerInterface $logger
-     * @param KernelInterface $kernel
-     * @param int|null        $timeout
-     */
     public function __construct(
         LoggerInterface $logger,
         KernelInterface $kernel,
@@ -54,9 +33,6 @@ class InNewProcessRunner implements JobRunner
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function run(CommandMessage $message): void
     {
         $phpBinaryPath = (new PhpExecutableFinder)->find();
@@ -92,11 +68,6 @@ class InNewProcessRunner implements JobRunner
         }
     }
 
-    /**
-     * @param CommandMessage $message
-     *
-     * @return array
-     */
     private function getOptions(CommandMessage $message): array
     {
         $options = [];

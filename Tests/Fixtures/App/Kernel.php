@@ -3,21 +3,20 @@
 namespace RetailCrm\ServiceBundle\Tests\Fixtures\App;
 
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
-use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 class Kernel extends \Symfony\Component\HttpKernel\Kernel
 {
     use MicroKernelTrait;
 
-    public function registerBundles()
+    public function registerBundles(): array
     {
         return [
             new \Symfony\Bundle\FrameworkBundle\FrameworkBundle()
         ];
     }
 
-    protected function configureContainer(ContainerBuilder $container/*, LoaderInterface $loader*/): void
+    protected function configureContainer(ContainerBuilder $container): void
     {
         $container
             ->register(TestCommand::class, TestCommand::class)
@@ -26,8 +25,4 @@ class Kernel extends \Symfony\Component\HttpKernel\Kernel
 
         $container->setParameter('kernel.project_dir', __DIR__ . '/..');
     }
-
-//    public function registerContainerConfiguration(LoaderInterface $loader)
-//    {
-//    }
 }

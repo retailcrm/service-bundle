@@ -12,11 +12,6 @@ use RetailCrm\ServiceBundle\Security\FrontApiClientAuthenticator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ParameterBag\EnvPlaceholderParameterBag;
 
-/**
- * Class RetailCrmServiceExtensionTest
- *
- * @package RetailCrm\ServiceBundle\Tests\DependencyInjection
- */
 class RetailCrmServiceExtensionTest extends TestCase
 {
     private $container;

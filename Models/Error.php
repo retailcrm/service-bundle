@@ -2,25 +2,11 @@
 
 namespace RetailCrm\ServiceBundle\Models;
 
-/**
- * Class Error
- *
- * @package RetailCrm\ServiceBundle\Models
- */
 class Error
 {
-    /**
-     * @var string
-     */
-    public $code;
+    public string $code;
 
-    /**
-     * @var string
-     */
-    public $message;
+    public string $message;
 
-    /**
-     * @var array
-     */
-    public $details;
+    public array $details;
 }

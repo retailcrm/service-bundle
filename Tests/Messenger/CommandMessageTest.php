@@ -5,11 +5,6 @@ namespace RetailCrm\ServiceBundle\Tests\Messenger;
 use PHPUnit\Framework\TestCase;
 use RetailCrm\ServiceBundle\Tests\DataFixtures\TestMessage;
 
-/**
- * Class CommandMessageTest
- *
- * @package RetailCrm\ServiceBundle\Tests\Messenger
- */
 class CommandMessageTest extends TestCase
 {
     public function testMessage(): void
