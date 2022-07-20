@@ -9,37 +9,16 @@ use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
 use Generator;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-/**
- * Class CallbackValueResolver
- *
- * @package RetailCrm\ServiceBundle\ArgumentResolver
- */
 class CallbackValueResolver extends AbstractValueResolver implements ArgumentValueResolverInterface
 {
-    private $serializer;
-    private $requestSchema;
-
-    /**
-     * CallbackValueResolver constructor.
-     *
-     * @param Adapter             $serializer
-     * @param ValidatorInterface  $validator
-     * @param array               $requestSchema
-     */
     public function __construct(
-        Adapter $serializer,
         ValidatorInterface $validator,
-        array $requestSchema
+        private Adapter $serializer,
+        private array $requestSchema
     ) {
         parent::__construct($validator);
-
-        $this->serializer = $serializer;
-        $this->requestSchema = $requestSchema;
     }
 
-    /**
-     * {@inheritdoc }
-     */
     public function supports(Request $request, ArgumentMetadata $argument): bool
     {
         if (empty($this->requestSchema) || $request->getMethod() !== Request::METHOD_POST) {
@@ -49,9 +28,6 @@ class CallbackValueResolver extends AbstractValueResolver implements ArgumentVal
         return null !== $this->search($request, $argument);
     }
 
-    /**
-     * {@inheritdoc }
-     */
     public function resolve(Request $request, ArgumentMetadata $argument): Generator
     {
         $parameter = $this->search($request, $argument);
@@ -61,12 +37,6 @@ class CallbackValueResolver extends AbstractValueResolver implements ArgumentVal
         yield $data;
     }
 
-    /**
-     * @param Request          $request
-     * @param ArgumentMetadata $argument
-     *
-     * @return string|null
-     */
     private function search(Request $request, ArgumentMetadata $argument): ?string
     {
         foreach ($this->requestSchema as $callback) {
