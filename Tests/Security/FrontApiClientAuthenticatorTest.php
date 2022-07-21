@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 
 class FrontApiClientAuthenticatorTest extends TestCase
 {
@@ -65,19 +66,14 @@ class FrontApiClientAuthenticatorTest extends TestCase
         $security = $this->createMock(Security::class);
 
         $user = new User();
-        $userRepository = $this->createMock(ObjectRepository::class);
-        $userRepository
-            ->expects(static::once())
-            ->method('findOneBy')
-            ->with([FrontApiClientAuthenticator::AUTH_FIELD => '123'])
-            ->willReturn($user)
-        ;
         $auth = new FrontApiClientAuthenticator($errorResponseFactory, $security);
-        $auth->setUserRepository($userRepository);
 
         $passport = $auth->authenticate(new Request([], [FrontApiClientAuthenticator::AUTH_FIELD => '123']));
-        $authUser = $passport->getUser();
-        static::assertEquals($user, $authUser);
+        static::assertTrue($passport->hasBadge(UserBadge::class));
+        static::assertEquals(
+            $user->getUserIdentifier(),
+            $passport->getBadge(UserBadge::class)->getUserIdentifier()
+        );
 
         $this->expectException(AuthenticationException::class);
         $auth->authenticate(new Request());

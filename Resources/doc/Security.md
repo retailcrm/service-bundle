@@ -23,12 +23,13 @@ security:
             custom_authenticators:
                 - RetailCrm\ServiceBundle\Security\CallbackClientAuthenticator
         front:
-            pattern: ^/(front|login)
+            pattern: ^/auth
             provider: connection
             stateless: false
             remember_me:
                 secret: '%kernel.secret%'
                 lifetime: 604800 # 1 week in seconds
+                signature_properties: ['clientId']
                 always_remember_me: true
             custom_authenticators:
                 - RetailCrm\ServiceBundle\Security\FrontApiClientAuthenticator
@@ -41,33 +42,27 @@ security:
         - { path: ^/simple-connection, roles: PUBLIC_ACCESS }
 ```
 
-To authenticate the user after creating it, you can use the following code
+Login controller will be called after the authenticator successfully authenticates the user. You can get the authenticated user, generate a token (or whatever you need to return) and return response:
 
 ```php
 
-    use App\Entity\Connection;
-    use App\Services\ConnectionManager;
-    use Symfony\Component\HttpFoundation\Request;
-    use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
-    use RetailCrm\ServiceBundle\Security\FrontApiClientAuthenticator;
+    use App\Entity\User;
+    use Symfony\Component\Security\Http\Attribute\CurrentUser;
 
-    class AppController extends AbstractController
+    class ApiLoginController extends AbstractController
     {
-        public function someAction(
-            Request $request,
-            Connection $connection,
-            ConnectionManager $manager,
-            UserAuthenticatorInterface $userAuthenticator,
-            FrontApiClientAuthenticator $authenticator
-        ): Response {
-            $exist = $manager->search($connection); //get connection
-
-            $userAuthenticator->authenticateUser(
-                $connection,
-                $authenticator,
-                $request
-            );
+        #[Route('/auth', name: 'auth')]
+        public function auth(#[CurrentUser] ?User $user): Response
+        {
+            $token = ...; // somehow create an API token for $user
+ 
+            return $this->json([
+                'user'  => $user->getUserIdentifier(),
+                'token' => $token,
+            ]);
         }
     }
 
 ```
+
+The <code>#[CurrentUser]</code> can only be used in controller arguments to retrieve the authenticated user. In services, you would use getUser().

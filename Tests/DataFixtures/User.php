@@ -6,6 +6,8 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class User implements UserInterface
 {
+    protected string $clientId = '123';
+
     public function getRoles(): array
     {
         return ["USER"];
@@ -22,6 +24,6 @@ class User implements UserInterface
 
     public function getUserIdentifier(): string
     {
-        return 'identifier';
+        return $this->clientId;
     }
 }

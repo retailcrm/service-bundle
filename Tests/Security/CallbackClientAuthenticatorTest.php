@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
+use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 
 class CallbackClientAuthenticatorTest extends TestCase
 {
@@ -58,19 +59,13 @@ class CallbackClientAuthenticatorTest extends TestCase
         $errorResponseFactory = $this->createMock(ErrorJsonResponseFactory::class);
         $user = new User();
 
-        $userRepository = $this->createMock(ObjectRepository::class);
-        $userRepository
-            ->expects(static::once())
-            ->method('findOneBy')
-            ->willReturn($user)
-        ;
-
         $auth = new CallbackClientAuthenticator($errorResponseFactory);
-        $auth->setUserRepository($userRepository);
-
         $passport = $auth->authenticate(new Request([], [CallbackClientAuthenticator::AUTH_FIELD => '123']));
-        $authUser = $passport->getUser();
-        static::assertEquals($user, $authUser);
+        static::assertTrue($passport->hasBadge(UserBadge::class));
+        static::assertEquals(
+            $user->getUserIdentifier(),
+            $passport->getBadge(UserBadge::class)->getUserIdentifier()
+        );
 
         $this->expectException(AuthenticationException::class);
         $auth->authenticate(new Request());

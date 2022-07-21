@@ -66,8 +66,8 @@ class RetailCrmServiceExtension extends Extension
         $container
             ->register(CallbackValueResolver::class)
             ->setArguments([
-                new Reference($container->getParameter('retail_crm_service.request_schema.callback.serializer')),
                 new Reference('validator'),
+                new Reference($container->getParameter('retail_crm_service.request_schema.callback.serializer')),
                 $container->getParameter('retail_crm_service.request_schema.callback.supports')
             ])
             ->addTag('controller.argument_value_resolver', ['priority' => 50])
@@ -76,8 +76,8 @@ class RetailCrmServiceExtension extends Extension
         $container
             ->register(ClientValueResolver::class)
             ->setArguments([
-                new Reference($container->getParameter('retail_crm_service.request_schema.client.serializer')),
                 new Reference('validator'),
+                new Reference($container->getParameter('retail_crm_service.request_schema.client.serializer')),
                 $container->getParameter('retail_crm_service.request_schema.client.supports')
             ])
             ->addTag('controller.argument_value_resolver', ['priority' => 50])

@@ -38,8 +38,7 @@ class FrontApiClientAuthenticator extends AbstractClientAuthenticator
 
         return new SelfValidatingPassport(
             new UserBadge(
-                $identifier,
-                fn ($userIdentifier) => $this->userRepository->findOneBy([static::AUTH_FIELD => $userIdentifier]),
+                $identifier
             ),
             [new RememberMeBadge()]
         );
