@@ -7,11 +7,6 @@ use RetailCrm\ServiceBundle\Messenger\MessageHandler\InNewProcessRunner;
 use RetailCrm\ServiceBundle\Tests\Fixtures\App\TestCommandMessage;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
-/**
- * Class InNewProcessRunnerTest
- *
- * @package RetailCrm\ServiceBundle\Tests\Messenger\MessageHandler
- */
 class InNewProcessRunnerTest extends KernelTestCase
 {
     protected function setUp(): void

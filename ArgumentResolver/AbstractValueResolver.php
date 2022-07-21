@@ -5,30 +5,13 @@ namespace RetailCrm\ServiceBundle\ArgumentResolver;
 use RetailCrm\ServiceBundle\Exceptions\InvalidRequestArgumentException;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-/**
- * Class AbstractValueResolver
- *
- * @package RetailCrm\ServiceBundle\ArgumentResolver
- */
 abstract class AbstractValueResolver
 {
-    protected $validator;
-
-    /**
-     * AbstractValueResolver constructor.
-     *
-     * @param ValidatorInterface $validator
-     */
-    public function __construct(ValidatorInterface $validator)
+    public function __construct(
+        protected ValidatorInterface $validator)
     {
-        $this->validator = $validator;
     }
 
-    /**
-     * @param object $data
-     *
-     * @return void
-     */
     protected function validate(object $data): void
     {
         $errors = $this->validator->validate($data);

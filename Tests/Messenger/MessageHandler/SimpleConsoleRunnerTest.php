@@ -7,11 +7,6 @@ use RetailCrm\ServiceBundle\Messenger\MessageHandler\SimpleConsoleRunner;
 use RetailCrm\ServiceBundle\Tests\Fixtures\App\TestCommandMessage;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
-/**
- * Class SimpleConsoleRunnerTest
- *
- * @package RetailCrm\ServiceBundle\Tests\Messenger\MessageHandler
- */
 class SimpleConsoleRunnerTest extends KernelTestCase
 {
     protected function setUp(): void

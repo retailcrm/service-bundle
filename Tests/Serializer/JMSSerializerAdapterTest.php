@@ -7,7 +7,7 @@ use PHPUnit\Framework\TestCase;
 use RetailCrm\ServiceBundle\Serializer\JMSSerializerAdapter;
 use RetailCrm\ServiceBundle\Tests\DataFixtures\RequestDto;
 
-class JSMSerializerAdapterTest extends TestCase
+class JMSSerializerAdapterTest extends TestCase
 {
     private $serializer;
     private $transformer;

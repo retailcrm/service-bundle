@@ -7,16 +7,10 @@ use RetailCrm\ServiceBundle\ArgumentResolver\CallbackValueResolver;
 use RetailCrm\ServiceBundle\ArgumentResolver\ClientValueResolver;
 use RetailCrm\ServiceBundle\DependencyInjection\RetailCrmServiceExtension;
 use RetailCrm\ServiceBundle\Response\ErrorJsonResponseFactory;
-use RetailCrm\ServiceBundle\Security\CallbackClientAuthenticator;
-use RetailCrm\ServiceBundle\Security\FrontApiClientAuthenticator;
+use RetailCrm\ServiceBundle\Security\ApiClientAuthenticator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ParameterBag\EnvPlaceholderParameterBag;
 
-/**
- * Class RetailCrmServiceExtensionTest
- *
- * @package RetailCrm\ServiceBundle\Tests\DependencyInjection
- */
 class RetailCrmServiceExtensionTest extends TestCase
 {
     private $container;
@@ -57,7 +51,6 @@ class RetailCrmServiceExtensionTest extends TestCase
         static::assertTrue($this->container->hasDefinition(CallbackValueResolver::class));
         static::assertTrue($this->container->hasDefinition(ClientValueResolver::class));
         static::assertTrue($this->container->hasDefinition(ErrorJsonResponseFactory::class));
-        static::assertTrue($this->container->hasDefinition(CallbackClientAuthenticator::class));
-        static::assertTrue($this->container->hasDefinition(FrontApiClientAuthenticator::class));
+        static::assertTrue($this->container->hasDefinition(ApiClientAuthenticator::class));
     }
 }

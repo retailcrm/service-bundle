@@ -2,6 +2,8 @@
 
 #### Callbacks (form data)
 
+> For successful deserialization of an entity, there must be setters for the passed parameters
+
 To automatically get the callback request parameter
 
 ```php

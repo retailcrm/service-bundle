@@ -2,11 +2,6 @@
 
 namespace RetailCrm\ServiceBundle\Models;
 
-/**
- * Class Error
- *
- * @package RetailCrm\ServiceBundle\Models
- */
 class Error
 {
     /**

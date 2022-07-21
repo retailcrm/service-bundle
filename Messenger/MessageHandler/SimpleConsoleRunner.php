@@ -9,38 +9,12 @@ use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\HttpKernel\KernelInterface;
 
-/**
- * Class SimpleConsoleRunner
- *
- * @package RetailCrm\ServiceBundle\Messenger\MessageHandler
- */
 class SimpleConsoleRunner implements JobRunner
 {
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    /**
-     * @var KernelInterface
-     */
-    private $kernel;
-
-    /**
-     * CommandQueueHandler constructor.
-     *
-     * @param LoggerInterface $logger
-     * @param KernelInterface $kernel
-     */
-    public function __construct(LoggerInterface $logger, KernelInterface $kernel)
+    public function __construct(private LoggerInterface $logger, private KernelInterface $kernel)
     {
-        $this->logger = $logger;
-        $this->kernel = $kernel;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function run(CommandMessage $message): void
     {
         $application = new Application($this->kernel);

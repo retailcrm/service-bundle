@@ -15,11 +15,6 @@ use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Validator\Validation;
 use Generator;
 
-/**
- * Class CallbackValueResolverTest
- *
- * @package RetailCrm\ServiceBundle\Tests\ArgumentResolver
- */
 class CallbackValueResolverTest extends TestCase
 {
     private $resolver;
@@ -28,10 +23,11 @@ class CallbackValueResolverTest extends TestCase
     {
         $serializer = new Serializer([new ObjectNormalizer()], [new JsonEncoder()]);
         $this->resolver = new CallbackValueResolver(
-            new SymfonySerializerAdapter($serializer, $serializer),
             Validation::createValidatorBuilder()
                 ->enableAnnotationMapping()
+                ->addDefaultDoctrineAnnotationReader()
                 ->getValidator(),
+            new SymfonySerializerAdapter($serializer, $serializer),
             [
                 [
                     'type' => RequestDto::class,

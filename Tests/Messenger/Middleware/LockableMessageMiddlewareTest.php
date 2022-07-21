@@ -15,17 +15,9 @@ use Symfony\Component\Messenger\Middleware\MiddlewareInterface;
 use Symfony\Component\Messenger\Middleware\StackInterface;
 use Symfony\Component\Messenger\Stamp\ReceivedStamp;
 
-/**
- * Class LockableMessageMiddlewareTest
- *
- * @package RetailCrm\ServiceBundle\Tests\Messenger\Middleware
- */
 class LockableMessageMiddlewareTest extends TestCase
 {
-    /**
-     * @var LockFactory
-     */
-    private $lockFactory;
+    private LockFactory $lockFactory;
 
     protected function setUp(): void
     {
@@ -35,7 +27,7 @@ class LockableMessageMiddlewareTest extends TestCase
     public function testHandle(): void
     {
         $store = $this->createMock(PersistingStoreInterface::class);
-        $key = new Key(uniqid());
+        $key = new Key(uniqid('', true));
         $lock = new Lock($key, $store);
         $this->lockFactory->expects(static::once())->method('createLock')->willReturn($lock);
         $envelope = new Envelope(new TestMessage(), [new ReceivedStamp('test')]);
@@ -55,7 +47,7 @@ class LockableMessageMiddlewareTest extends TestCase
     {
         $store = $this->createMock(PersistingStoreInterface::class);
         $store->method('save')->willThrowException(new LockConflictedException);
-        $key = new Key(uniqid());
+        $key = new Key(uniqid('', true));
         $lock = new Lock($key, $store);
         $this->lockFactory->expects(static::once())->method('createLock')->willReturn($lock);
         $envelope = new Envelope(new TestMessage(), [new ReceivedStamp('test')]);
@@ -75,7 +67,7 @@ class LockableMessageMiddlewareTest extends TestCase
     {
         $store = $this->createMock(PersistingStoreInterface::class);
         $store->method('save')->willThrowException(new LockConflictedException);
-        $key = new Key(uniqid());
+        $key = new Key(uniqid('', true));
         $lock = new Lock($key, $store);
         $this->lockFactory->expects(static::never())->method('createLock')->willReturn($lock);
         $envelope = new Envelope(new \stdClass(), [new ReceivedStamp('test')]);
@@ -95,7 +87,7 @@ class LockableMessageMiddlewareTest extends TestCase
     {
         $store = $this->createMock(PersistingStoreInterface::class);
         $store->method('save')->willThrowException(new LockConflictedException);
-        $key = new Key(uniqid());
+        $key = new Key(uniqid('', true));
         $lock = new Lock($key, $store);
         $this->lockFactory->expects(static::never())->method('createLock')->willReturn($lock);
         $envelope = new Envelope(new TestMessage());

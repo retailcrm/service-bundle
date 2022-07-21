@@ -6,11 +6,6 @@ use PHPUnit\Framework\TestCase;
 use RetailCrm\ServiceBundle\DependencyInjection\Configuration;
 use Symfony\Component\Config\Definition\Processor;
 
-/**
- * Class ConfigurationTest
- *
- * @package RetailCrm\ServiceBundle\Tests\DependencyInjection
- */
 class ConfigurationTest extends TestCase
 {
     public function testConfig(): void

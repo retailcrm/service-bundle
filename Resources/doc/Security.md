@@ -4,67 +4,58 @@ Example security configuration:
 
 ```yaml
 security:
+    hide_user_not_found: false
     providers:
-        client:
-            entity:
-                class: 'App\Entity\Connection' # must implements UserInterface
-                property: 'clientId'
+        connection:
+            entity: { class: App\Entity\Connection, property: clientId }
     firewalls:
-        api:
-            pattern: ^/api
-            provider: client
-            anonymous: ~
-            lazy: true
-            stateless: false
-            guard:
-                authenticators:
-                    - RetailCrm\ServiceBundle\Security\FrontApiClientAuthenticator
-        callback:
-            pattern: ^/callback
-            provider: client
-            anonymous: ~
-            lazy: true
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+        simple-connection:
+            pattern: ^/simple-connection
             stateless: true
-            guard:
-                authenticators:
-                    - RetailCrm\ServiceBundle\Security\CallbackClientAuthenticator
+            security: false
+        front:
+            pattern: ^/front
+            provider: connection
+            stateless: true
+            custom_authenticators:
+                - RetailCrm\ServiceBundle\Security\FrontApiClientAuthenticator
         main:
-            anonymous: true
+            pattern: ^/
             lazy: true
 
     access_control:
-         - { path: ^/api/login, roles: IS_AUTHENTICATED_ANONYMOUSLY } # login for programmatically authentication user
-         - { path: ^/api, roles: ROLE_USER }
-         - { path: ^/callback, roles: ROLE_USER }
+        - { path: ^/front, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/(simple-connection), roles: PUBLIC_ACCESS }
 ```
 
-To authenticate the user after creating it, you can use the following code
+Login controller will be called after the authenticator successfully authenticates the user. You can get the authenticated user, generate a token (or whatever you need to return) and return response:
 
 ```php
 
-use Symfony\Component\Security\Guard\GuardAuthenticatorHandler;
-use RetailCrm\ServiceBundle\Security\FrontApiClientAuthenticator;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
+    use App\Entity\User;
+    use Symfony\Component\Security\Http\Attribute\CurrentUser;
 
-class AppController extends AbstractController
-{
-    public function someAction(
-        Request $request,
-        GuardAuthenticatorHandler $guardAuthenticatorHandler,
-        FrontApiClientAuthenticator $frontApiClientAuthenticator,
-        ConnectionManager $manager
-    ): Response {
-        $user = $manager->getUser(); // getting user
-
-        $guardAuthenticatorHandler->authenticateUserAndHandleSuccess(
-            $user,
-            $request,
-            $frontApiClientAuthenticator,
-            'api'
-        );
-        // ...
+    class ApiLoginController extends AbstractController
+    {
+        #[Route('/front', name: 'front')]
+        public function front(#[CurrentUser] ?User $user): Response
+        {
+            $token = ...; // somehow create an API token for $user
+ 
+            return $this->json([
+                'user'  => $user->getUserIdentifier(),
+                'token' => $token,
+            ]);
+        }
     }
-}
 
 ```
+
+The <code>#[CurrentUser]</code> can only be used in controller arguments to retrieve the authenticated user. In services, you would use getUser().
+
+See the [manual](https://symfony.com/doc/6.0/security.html) for more information.
+
+> If you set the parameter stateless: false, then during an active session the login will be made on the basis of the data deserialized from the session storage
