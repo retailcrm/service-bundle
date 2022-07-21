@@ -2,10 +2,9 @@
 
 namespace RetailCrm\ServiceBundle\Tests\Security;
 
-use Doctrine\Persistence\ObjectRepository;
 use PHPUnit\Framework\TestCase;
 use RetailCrm\ServiceBundle\Response\ErrorJsonResponseFactory;
-use RetailCrm\ServiceBundle\Security\FrontApiClientAuthenticator;
+use RetailCrm\ServiceBundle\Security\ApiClientAuthenticator;
 use RetailCrm\ServiceBundle\Tests\DataFixtures\User;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,7 +14,7 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 
-class FrontApiClientAuthenticatorTest extends TestCase
+class ApiClientAuthenticatorTest extends TestCase
 {
     public function testOnAuthenticationFailure(): void
     {
@@ -30,7 +29,7 @@ class FrontApiClientAuthenticatorTest extends TestCase
                 )
             );
         $security = $this->createMock(Security::class);
-        $auth = new FrontApiClientAuthenticator($errorResponseFactory, $security);
+        $auth = new ApiClientAuthenticator($errorResponseFactory, $security);
         $result = $auth->onAuthenticationFailure(new Request(), new AuthenticationException());
 
         static::assertInstanceOf(JsonResponse::class, $result);
@@ -43,7 +42,7 @@ class FrontApiClientAuthenticatorTest extends TestCase
         $security = $this->createMock(Security::class);
         $security->method('getUser')->willReturn(new User());
 
-        $auth = new FrontApiClientAuthenticator($errorResponseFactory, $security);
+        $auth = new ApiClientAuthenticator($errorResponseFactory, $security);
         $result = $auth->supports(new Request());
 
         static::assertFalse($result);
@@ -54,8 +53,8 @@ class FrontApiClientAuthenticatorTest extends TestCase
         $errorResponseFactory = $this->createMock(ErrorJsonResponseFactory::class);
         $security = $this->createMock(Security::class);
         $security->method('getUser')->willReturn(null);
-        $auth = new FrontApiClientAuthenticator($errorResponseFactory, $security);
-        $result = $auth->supports(new Request([], [FrontApiClientAuthenticator::AUTH_FIELD => '123']));
+        $auth = new ApiClientAuthenticator($errorResponseFactory, $security);
+        $result = $auth->supports(new Request([], [ApiClientAuthenticator::AUTH_FIELD => '123']));
 
         static::assertTrue($result);
     }
@@ -66,9 +65,9 @@ class FrontApiClientAuthenticatorTest extends TestCase
         $security = $this->createMock(Security::class);
 
         $user = new User();
-        $auth = new FrontApiClientAuthenticator($errorResponseFactory, $security);
+        $auth = new ApiClientAuthenticator($errorResponseFactory, $security);
 
-        $passport = $auth->authenticate(new Request([], [FrontApiClientAuthenticator::AUTH_FIELD => '123']));
+        $passport = $auth->authenticate(new Request([], [ApiClientAuthenticator::AUTH_FIELD => '123']));
         static::assertTrue($passport->hasBadge(UserBadge::class));
         static::assertEquals(
             $user->getUserIdentifier(),
@@ -86,7 +85,7 @@ class FrontApiClientAuthenticatorTest extends TestCase
         $request = $this->createMock(Request::class);
         $token = $this->createMock(TokenInterface::class);
 
-        $auth = new FrontApiClientAuthenticator($errorResponseFactory, $security);
+        $auth = new ApiClientAuthenticator($errorResponseFactory, $security);
 
         $result = $auth->onAuthenticationSuccess($request, $token, 'key');
 
