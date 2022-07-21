@@ -6,8 +6,7 @@ use RetailCrm\ServiceBundle\ArgumentResolver\CallbackValueResolver;
 use RetailCrm\ServiceBundle\ArgumentResolver\ClientValueResolver;
 use RetailCrm\ServiceBundle\Messenger\MessageHandler;
 use RetailCrm\ServiceBundle\Response\ErrorJsonResponseFactory;
-use RetailCrm\ServiceBundle\Security\CallbackClientAuthenticator;
-use RetailCrm\ServiceBundle\Security\FrontApiClientAuthenticator;
+use RetailCrm\ServiceBundle\Security\ApiClientAuthenticator;
 use RetailCrm\ServiceBundle\Serializer\JMSSerializerAdapter;
 use RetailCrm\ServiceBundle\Serializer\SymfonySerializerAdapter;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -88,11 +87,7 @@ class RetailCrmServiceExtension extends Extension
             ->setAutowired(true);
 
         $container
-            ->register(CallbackClientAuthenticator::class)
-            ->setAutowired(true);
-
-        $container
-            ->register(FrontApiClientAuthenticator::class)
+            ->register(ApiClientAuthenticator::class)
             ->setAutowired(true);
 
         $container
