@@ -21,9 +21,15 @@ class LockableMessageMiddleware implements MiddlewareInterface
      */
     private $lockFactory;
 
-    public function __construct(LockFactory $lockFactory)
+    /**
+     * @var int|null
+     */
+    private $ttl;
+
+    public function __construct(LockFactory $lockFactory, int $ttl = null)
     {
         $this->lockFactory = $lockFactory;
+        $this->ttl = $ttl;
     }
 
     /**
@@ -39,7 +45,7 @@ class LockableMessageMiddleware implements MiddlewareInterface
         $message = $envelope->getMessage();
 
         if ($envelope->all(ReceivedStamp::class) && $message instanceof LockableMessage) {
-            $lock = $this->lockFactory->createLock($this->objectHash($message), null);
+            $lock = $this->lockFactory->createLock($this->objectHash($message), $this->ttl);
             if (!$lock->acquire()) {
                 return $envelope;
             }
